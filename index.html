@@ -502,9 +502,9 @@
         <div class="win-horn win-horn--left" aria-hidden="true">🎺</div>
         <div class="win-horn win-horn--right" aria-hidden="true">🎺</div>
         <div class="win-icon" id="win-icon">🏆</div>
-        <div class="win-shout">¡GANASTE!</div>
+        <div class="win-shout" id="win-shout">¡GANASTE!</div>
         <div class="win-prize" id="win-prize">Premio</div>
-        <p class="win-sub">¡Así se siente ganar! Regístrate para reclamar tu premio real 🎯</p>
+        <p class="win-sub" id="win-sub">¡Así se siente ganar! Regístrate para reclamar tu premio real 🎯</p>
         <div class="cta-wrap"><button class="btn-primary" id="btn-claim" type="button">RECLAMAR MI PREMIO 🎁</button></div>
         <button class="link-ghost" id="btn-spin-again" type="button">↺ Girar otra vez</button>
       </div>
@@ -681,12 +681,24 @@
     var CX = 140, CY = 140, R = 140, LABEL_R = 92;
 
     var WHEEL_PRIZES = [
-      { label: "Premio sorpresa", icon: "🎁", color: "#6D388B" },
-      { label: "Dulce", icon: "🍬", color: "#FF8577" },
-      { label: "Sigue intentando", icon: "🔁", color: "#FFB25C" },
-      { label: "Sigue intentando", icon: "🔁", color: "#FF8A0A" },
-      { label: "Dulce", icon: "🍬", color: "#9B6FC2" },
-      { label: "Landing gratis", icon: "🏆", color: "#FF503E" }
+      { label: "Premio sorpresa", icon: "🎁", color: "#6D388B", shout: "¡GANASTE!",
+        hook: "Y no te decimos qué es todavía... Regístrate para descubrirlo 🎁",
+        cta: "DESCUBRIR MI PREMIO 🎁" },
+      { label: "Dulce", icon: "🍬", color: "#FF8577", shout: "¡GANASTE!",
+        hook: "Tu dulce ya está asegurado 🍬 Pero eso es lo de menos — regístrate y mira cómo nuestros aliados ya están facturando en grande con Primos.",
+        cta: "RECLAMAR MI DULCE 🍬" },
+      { label: "Sigue intentando", icon: "🔁", color: "#FFB25C", shout: "¡CASI!",
+        hook: "Esta vez no, pero tienes una segunda oportunidad 🔁 Regístrate y vuelve a intentarlo.",
+        cta: "QUIERO MI SEGUNDA OPORTUNIDAD 🔁" },
+      { label: "Sigue intentando", icon: "🔁", color: "#FF8A0A", shout: "¡CASI!",
+        hook: "Esta vez no, pero tienes una segunda oportunidad 🔁 Regístrate y vuelve a intentarlo.",
+        cta: "QUIERO MI SEGUNDA OPORTUNIDAD 🔁" },
+      { label: "Dulce", icon: "🍬", color: "#9B6FC2", shout: "¡GANASTE!",
+        hook: "Tu dulce ya está asegurado 🍬 Pero eso es lo de menos — regístrate y mira cómo nuestros aliados ya están facturando en grande con Primos.",
+        cta: "RECLAMAR MI DULCE 🍬" },
+      { label: "Landing gratis", icon: "🏆", color: "#FF503E", shout: "¡TE GANASTE LA GRANDE!",
+        hook: "Una landing page GRATIS, hecha por Mesa Studio 🏆 Regístrate ya para reclamarla.",
+        cta: "RECLAMAR MI LANDING 🏆" }
     ];
     var segDeg = 360 / WHEEL_PRIZES.length;
 
@@ -740,7 +752,10 @@
       spinning = false;
       var prize = WHEEL_PRIZES[index];
       document.getElementById("win-icon").textContent = prize.icon;
+      document.getElementById("win-shout").textContent = prize.shout;
       document.getElementById("win-prize").textContent = prize.label;
+      document.getElementById("win-sub").textContent = prize.hook;
+      document.getElementById("btn-claim").textContent = prize.cta;
       document.getElementById("win-overlay").classList.add("show");
       launchConfetti();
       playFanfare();
