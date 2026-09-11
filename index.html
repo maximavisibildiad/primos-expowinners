@@ -214,6 +214,23 @@
   .btn-primary:focus-visible{outline:3px solid var(--accent); outline-offset:3px;}
   .btn-primary:disabled{opacity:.55; cursor:not-allowed; transform:none;}
 
+  .btn-secondary{
+    appearance:none; cursor:pointer;
+    background:var(--surface); color:var(--ink);
+    border:2px solid var(--border);
+    font-size:1.02rem; font-weight:800; letter-spacing:.01em;
+    padding:14px 28px; border-radius:999px;
+    width:100%; max-width:320px; margin-top:12px;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .btn-secondary:hover{ transform:translateY(-2px); border-color:var(--accent); }
+  .btn-secondary:active{ transform:translateY(0) scale(.98); }
+  .btn-secondary:focus-visible{ outline:3px solid var(--accent); outline-offset:3px; }
+  .cta-divider{
+    font-size:.68rem; font-weight:800; color:var(--ink-soft); text-transform:uppercase;
+    letter-spacing:.08em; margin:12px 0 0;
+  }
+
   .cta-wrap{position:relative; display:inline-flex; width:100%; max-width:320px; margin-top:18px;}
   .cta-wrap .btn-primary{margin-top:0;}
   .cta-wrap:before{
@@ -369,6 +386,7 @@
     margin-top:20px; background:var(--surface-2); border-radius:var(--radius-md);
     padding:14px 18px; font-size:.85rem; color:var(--ink); line-height:1.5; text-align:left;
   }
+  .upsell a{ color:var(--accent); font-weight:700; text-decoration:underline; }
 
   .win-overlay{
     position:fixed; inset:0; z-index:60;
@@ -466,8 +484,10 @@
     <section id="s-hero" class="screen is-active">
       <div class="hero-badge">🔥 SOLO EN EXPOWINNERS</div>
       <h1>Decide <span class="hl">tu suerte.</span></h1>
-      <p class="sub">Gira la ruleta, descubre qué te puede tocar y reclama tu premio real de Primo's. 12 y 13 de septiembre, Centro de Convenciones Ágora, Bogotá.</p>
-      <div class="cta-wrap"><button class="btn-primary" id="btn-go-wheel">¡QUIERO GIRAR! 🎯</button></div>
+      <p class="sub">Regístrate y decide tu suerte — en la pared del stand o desde tu celular. 12 y 13 de septiembre, Centro de Convenciones Ágora, Bogotá.</p>
+      <div class="cta-wrap"><button class="btn-primary" id="btn-go-wall">JUGAR EN LA PARED 🧱</button></div>
+      <div class="cta-divider">o si prefieres</div>
+      <button class="btn-secondary" id="btn-go-wheel">JUGAR EN MI CELULAR 📱</button>
       <div class="live-counter">🔥 <span id="spin-count">128</span> giros hoy</div>
       <div class="trust">+3.800 comercios ya compran con Primos</div>
       <div class="badge-grid">
@@ -536,9 +556,10 @@
         <span>Tu código de registro</span>
         <strong id="claim-code"></strong>
       </div>
+      <a class="btn-whatsapp" id="wa-send" href="#" target="_blank" rel="noopener" hidden>📲 Enviar mi captura por WhatsApp</a>
 
       <div class="upsell">
-        <strong>¿Tienes negocio?</strong> Como aliado Primos tienes acceso a más de 3.800 productos virales al mejor precio para revender. Pregúntanos cómo.
+        <strong>¿Tienes negocio?</strong> Como aliado Primos tienes acceso a más de 3.800 productos virales al mejor precio para revender. <a href="https://wa.me/573177521227?text=Hola%2C%20quiero%20ser%20aliado%20de%20Primos" target="_blank" rel="noopener">Pregúntanos cómo</a>.
       </div>
       <div class="deal-eyebrow">Esto podrías estar vendiendo tú</div>
       <div class="deal-strip" id="deal-strip-confirm"></div>
@@ -795,7 +816,19 @@
 
   var TALLY_URL = "https://tally.so/r/XxpozO";
 
+  document.getElementById("btn-go-wall").addEventListener("click", function(){
+    try {
+      localStorage.setItem("primos_modo", "pared");
+      localStorage.removeItem("primos_premio");
+    } catch (err) {}
+    var qs = new URLSearchParams();
+    qs.set("modo", "pared");
+    if (state.punto) qs.set("punto", state.punto);
+    window.location.href = TALLY_URL + "?" + qs.toString();
+  });
+
   document.getElementById("btn-claim").addEventListener("click", function(){
+    try { localStorage.removeItem("primos_modo"); } catch (err) {}
     try {
       localStorage.setItem("primos_premio", JSON.stringify({
         icon: state.premioIcon, label: state.premioLabel
@@ -816,19 +849,35 @@
     state.code = "PRIMOS-" + Math.floor(1000 + Math.random() * 9000);
     document.getElementById("claim-code").textContent = state.code;
 
+    var modo = null;
     var saved = null;
     try {
+      modo = localStorage.getItem("primos_modo");
+      localStorage.removeItem("primos_modo");
       saved = JSON.parse(localStorage.getItem("primos_premio") || "null");
       localStorage.removeItem("primos_premio");
     } catch (err) {}
 
-    if (saved && saved.label){
+    if (modo === "pared"){
       document.getElementById("pass-greet").textContent =
-        "¡Listo! Reclama tu premio: " + saved.icon + " " + saved.label;
-      document.getElementById("pass-prize").textContent = saved.icon + " " + saved.label;
+        "¡Listo! Ve a la pared del stand y muéstrale esta pantalla al equipo para jugar 🧱";
+      document.getElementById("pass-prize").textContent = "Juega en la pared 🧱";
     } else {
-      document.getElementById("pass-greet").textContent =
-        "¡Listo! Muestra esta pantalla para reclamar tu premio 🎯";
+      if (saved && saved.label){
+        document.getElementById("pass-greet").textContent =
+          "¡Listo! Reclama tu premio: " + saved.icon + " " + saved.label;
+        document.getElementById("pass-prize").textContent = saved.icon + " " + saved.label;
+      } else {
+        document.getElementById("pass-greet").textContent =
+          "¡Listo! Muestra esta pantalla para reclamar tu premio 🎯";
+      }
+
+      var waMsg = "Hola! Jugué en la ruleta de Primos en ExpoWinners";
+      if (saved && saved.label) waMsg += " y gané: " + saved.icon + " " + saved.label;
+      waMsg += ". Les adjunto la captura de mi premio 📸 Mi código es " + state.code;
+      var waLink = document.getElementById("wa-send");
+      waLink.href = "https://wa.me/573177521227?text=" + encodeURIComponent(waMsg);
+      waLink.hidden = false;
     }
 
     showScreen("s-pass");
