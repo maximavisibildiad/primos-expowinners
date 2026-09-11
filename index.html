@@ -463,9 +463,9 @@
     <section id="s-hero" class="screen is-active">
       <div class="hero-badge">🔥 SOLO EN EXPOWINNERS</div>
       <h1>Decide <span class="hl">tu suerte.</span></h1>
-      <p class="sub">Gira la ruleta, mira qué te puede tocar y ven a lanzar tu ficha de verdad al tablero de Primo's. 12 y 13 de septiembre, Centro de Convenciones Ágora, Bogotá.</p>
+      <p class="sub">Gira la ruleta, descubre qué te puede tocar y reclama tu premio real de Primo's. 12 y 13 de septiembre, Centro de Convenciones Ágora, Bogotá.</p>
       <div class="cta-wrap"><button class="btn-primary" id="btn-go-wheel">¡QUIERO GIRAR! 🎯</button></div>
-      <div class="live-counter">🔥 <span id="spin-count">128</span> fichas lanzadas hoy</div>
+      <div class="live-counter">🔥 <span id="spin-count">128</span> giros hoy</div>
       <div class="trust">+3.800 comercios ya compran con Primos</div>
       <div class="badge-grid">
         <div class="badge-pill"><i>🎯</i>Registro en 1 minuto</div>
@@ -479,7 +479,7 @@
 
     <section id="s-wheel" class="screen">
       <h2>Gira y descubre tu suerte</h2>
-      <p class="sub">Así se ve el tablero — el equipo de Primos te entrega tu premio real.</p>
+      <p class="sub">Descubre qué te puede tocar — el equipo de Primos te entrega tu premio real.</p>
       <div class="wheel-wrap">
         <div class="wheel-glow" aria-hidden="true"></div>
         <div class="pointer" aria-hidden="true"></div>
@@ -488,7 +488,7 @@
         <div class="wheel-hub" aria-hidden="true">🎯</div>
       </div>
       <button class="btn-primary" id="btn-spin" type="button">GIRAR</button>
-      <p class="wheel-note">Esta ficha es solo de práctica — regístrate para lanzar la de verdad.</p>
+      <p class="wheel-note">Esto es solo un adelanto — regístrate para ir por tu premio real.</p>
 
       <div class="deal-eyebrow">Lo que te puedes ganar</div>
       <div class="prize-grid">
@@ -506,7 +506,7 @@
         <div class="win-icon" id="win-icon">🏆</div>
         <div class="win-shout">¡GANASTE!</div>
         <div class="win-prize" id="win-prize">Premio</div>
-        <p class="win-sub">¡Así se siente ganar! Regístrate para lanzar tu ficha de verdad 🎯</p>
+        <p class="win-sub">¡Así se siente ganar! Regístrate para reclamar tu premio real 🎯</p>
         <div class="cta-wrap"><button class="btn-primary" id="btn-claim" type="button">RECLAMAR MI PREMIO 🎁</button></div>
         <button class="link-ghost" id="btn-spin-again" type="button">↺ Girar otra vez</button>
       </div>
@@ -514,7 +514,7 @@
 
     <section id="s-form" class="screen">
       <h2>Reclama tu premio</h2>
-      <p class="sub">Déjanos tus datos y te entregamos tu ficha para lanzarla de verdad.</p>
+      <p class="sub">Déjanos tus datos para entregarte tu premio real.</p>
       <form id="reg-form">
         <label>Nombre completo
           <input required id="f-name" type="text" placeholder="Tu nombre" autocomplete="name">
@@ -581,7 +581,7 @@
       <p class="sub" id="pass-greet"></p>
       <div class="pass-card">
         <span>Muéstrale esta pantalla al equipo de Primos</span>
-        <strong>Lanza tu ficha 🎯</strong>
+        <strong>Reclama tu premio 🎯</strong>
       </div>
       <div class="code-card">
         <span>Tu código de registro</span>
@@ -850,7 +850,7 @@
     state.code = "PRIMOS-" + Math.floor(1000 + Math.random() * 9000);
 
     document.getElementById("pass-greet").textContent =
-      "¡Listo, " + name + "! Muestra esta pantalla y lanza tu ficha 🎯";
+      "¡Listo, " + name + "! Muestra esta pantalla para reclamar tu premio 🎯";
     document.getElementById("claim-code").textContent = state.code;
 
     showScreen("s-pass");
