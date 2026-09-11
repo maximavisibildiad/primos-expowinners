@@ -284,6 +284,23 @@
   .code-card span{font-size:.68rem; font-weight:700; letter-spacing:.06em; color:var(--ink-soft); text-transform:uppercase;}
   .code-card strong{font-size:1.4rem; font-weight:800; letter-spacing:.03em; color:var(--accent);}
 
+  .ally-eyebrow{
+    font-size:.7rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--secondary); margin:22px 0 6px;
+  }
+  .ally-headline{
+    font-size:clamp(1.4rem,6vw,1.8rem); font-weight:800; line-height:1.15;
+    color:var(--ink); margin:0 0 6px; text-wrap:balance;
+  }
+  .ally-sub{
+    font-size:.88rem; color:var(--ink-soft); line-height:1.5; margin:0 0 16px; max-width:32ch;
+  }
+  .ally-video{
+    width:100%; max-width:280px; aspect-ratio:9/16; border-radius:var(--radius-md);
+    box-shadow:var(--shadow); background:var(--surface-2); display:block;
+    object-fit:cover;
+  }
+
   .wheel-label{
     font-size:.7rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
     color:var(--secondary); margin:18px 0 4px;
@@ -505,6 +522,13 @@
         <span>Tu código de registro</span>
         <strong id="claim-code"></strong>
       </div>
+
+      <div class="ally-eyebrow">🎥 Así hablan nuestros aliados</div>
+      <h3 class="ally-headline">Los más grandes ya crecen con Primos.</h3>
+      <p class="ally-sub">Ahora que dejaste tus datos, el siguiente caso de éxito puede ser el tuyo.</p>
+      <video class="ally-video" controls playsinline preload="none" poster="videos/referente-2-poster.jpg">
+        <source src="videos/referente-2.mp4" type="video/mp4">
+      </video>
 
       <div class="upsell">
         <strong>¿Tienes negocio?</strong> Como aliado Primos tienes acceso a más de 3.800 productos virales al mejor precio para revender. Pregúntanos cómo.
