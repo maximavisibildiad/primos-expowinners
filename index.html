@@ -523,7 +523,7 @@
 
       <div class="pass-card">
         <span>Muéstrale al equipo</span>
-        <strong>Reclama tu premio</strong>
+        <strong id="pass-prize">Reclama tu premio</strong>
       </div>
       <div class="code-card">
         <span>Tu código de registro</span>
@@ -753,6 +753,8 @@
       spinning = false;
       var prize = WHEEL_PRIZES[index];
       state.premio = prize.slug;
+      state.premioIcon = prize.icon;
+      state.premioLabel = prize.label;
       document.getElementById("win-icon").textContent = prize.icon;
       document.getElementById("win-shout").textContent = prize.shout;
       document.getElementById("win-prize").textContent = prize.label;
@@ -787,6 +789,11 @@
   var TALLY_URL = "https://tally.so/r/XxpozO";
 
   document.getElementById("btn-claim").addEventListener("click", function(){
+    try {
+      localStorage.setItem("primos_premio", JSON.stringify({
+        icon: state.premioIcon, label: state.premioLabel
+      }));
+    } catch (err) {}
     var qs = new URLSearchParams();
     if (state.premio) qs.set("premio", state.premio);
     if (state.punto) qs.set("punto", state.punto);
@@ -803,6 +810,15 @@
     document.getElementById("pass-greet").textContent =
       "¡Listo! Muestra esta pantalla para reclamar tu premio 🎯";
     document.getElementById("claim-code").textContent = state.code;
+
+    try {
+      var saved = JSON.parse(localStorage.getItem("primos_premio") || "null");
+      if (saved && saved.label){
+        document.getElementById("pass-prize").textContent = saved.icon + " " + saved.label;
+        localStorage.removeItem("primos_premio");
+      }
+    } catch (err) {}
+
     showScreen("s-pass");
   }
 })();
