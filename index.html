@@ -377,6 +377,7 @@
   }
   .win-overlay.show{ opacity:1; pointer-events:auto; }
   .win-card{
+    position:relative;
     background:var(--surface); border-radius:var(--radius-lg);
     padding:38px 28px 30px; width:100%; max-width:340px;
     text-align:center; box-shadow:0 30px 70px -20px rgba(0,0,0,.6);
@@ -384,6 +385,29 @@
     transition:transform .45s cubic-bezier(.2,1.4,.4,1), opacity .3s ease;
   }
   .win-overlay.show .win-card{ transform:scale(1) translateY(0); opacity:1; }
+  .win-horn{
+    position:absolute; bottom:-8px; font-size:2.8rem; z-index:2;
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,.35));
+    opacity:0;
+  }
+  .win-horn--left{ left:-16px; transform-origin:bottom right; }
+  .win-horn--right{ right:-16px; transform-origin:bottom left; transform:scaleX(-1); }
+  .win-overlay.show .win-horn--left{ animation:hornPopLeft .6s cubic-bezier(.22,1.7,.4,1) .12s forwards; }
+  .win-overlay.show .win-horn--right{ animation:hornPopRight .6s cubic-bezier(.22,1.7,.4,1) .12s forwards; }
+  @keyframes hornPopLeft{
+    0%{ transform:rotate(-40deg) scale(0); opacity:0; }
+    55%{ transform:rotate(-14deg) scale(1.2); opacity:1; }
+    100%{ transform:rotate(-20deg) scale(1); opacity:1; }
+  }
+  @keyframes hornPopRight{
+    0%{ transform:scaleX(-1) rotate(-40deg) scale(0); opacity:0; }
+    55%{ transform:scaleX(-1) rotate(-14deg) scale(1.2); opacity:1; }
+    100%{ transform:scaleX(-1) rotate(-20deg) scale(1); opacity:1; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .win-horn{ animation:none !important; opacity:1; transform:rotate(-20deg); }
+    .win-horn--right{ transform:scaleX(-1) rotate(-20deg); }
+  }
   .win-icon{
     font-size:5.2rem; line-height:1;
     filter:drop-shadow(0 10px 18px rgba(0,0,0,.35));
@@ -477,6 +501,8 @@
 
     <div class="win-overlay" id="win-overlay" aria-hidden="true">
       <div class="win-card">
+        <div class="win-horn win-horn--left" aria-hidden="true">🎺</div>
+        <div class="win-horn win-horn--right" aria-hidden="true">🎺</div>
         <div class="win-icon" id="win-icon">🏆</div>
         <div class="win-shout">¡GANASTE!</div>
         <div class="win-prize" id="win-prize">Premio</div>
@@ -649,6 +675,7 @@
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     var layer = document.getElementById("confetti");
     var colors = ["#FF503E","#6D388B","#FF8A0A","#FF8577","#9B6FC2","#FFFFFF"];
+    var partyEmoji = ["🎉","🎊","✨","🥳"];
     var cx = window.innerWidth / 2;
     var cy = window.innerHeight / 2;
     for (var i = 0; i < 110; i++){
@@ -660,9 +687,15 @@
       p.className = "confetti-piece";
       p.style.left = cx + "px";
       p.style.top = cy + "px";
-      p.style.width = (5 + Math.random() * 6) + "px";
-      p.style.height = (9 + Math.random() * 8) + "px";
-      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      var isEmoji = Math.random() < 0.22;
+      if (isEmoji){
+        p.textContent = partyEmoji[Math.floor(Math.random() * partyEmoji.length)];
+        p.style.fontSize = (16 + Math.random() * 12) + "px";
+      } else {
+        p.style.width = (5 + Math.random() * 6) + "px";
+        p.style.height = (9 + Math.random() * 8) + "px";
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      }
       p.style.setProperty("--dx", dx.toFixed(0) + "px");
       p.style.setProperty("--dy", dy.toFixed(0) + "px");
       p.style.setProperty("--rot", (Math.random() * 900 - 450).toFixed(0) + "deg");
