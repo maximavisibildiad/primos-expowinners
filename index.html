@@ -506,7 +506,6 @@
         <div class="win-prize" id="win-prize">Premio</div>
         <p class="win-sub" id="win-sub">¡Así se siente ganar! Regístrate para reclamar tu premio real 🎯</p>
         <div class="cta-wrap"><button class="btn-primary" id="btn-claim" type="button">RECLAMAR MI PREMIO 🎁</button></div>
-        <button class="link-ghost" id="btn-spin-again" type="button">↺ Girar otra vez</button>
       </div>
     </div>
 
@@ -515,8 +514,8 @@
       <div class="win-badge">🎯 ¡Registro listo!</div>
       <p class="sub" id="pass-greet"></p>
       <div class="pass-card">
-        <span>Muéstrale esta pantalla al equipo de Primos</span>
-        <strong>Reclama tu premio 🎯</strong>
+        <span>Muéstrale al equipo</span>
+        <strong>Reclama tu premio</strong>
       </div>
       <div class="code-card">
         <span>Tu código de registro</span>
@@ -603,7 +602,7 @@
   var params = new URLSearchParams(window.location.search);
   var puntoCaptura = params.get("punto") || params.get("utm_source") || "directo";
 
-  var state = { name: "", phone: "", city: "", biztype: "", interest: "", punto: puntoCaptura };
+  var state = { name: "", phone: "", city: "", biztype: "", interest: "", punto: puntoCaptura, premio: "" };
 
   function showScreen(id){
     document.querySelectorAll(".screen").forEach(function(s){ s.classList.remove("is-active", "anim"); });
@@ -681,22 +680,22 @@
     var CX = 140, CY = 140, R = 140, LABEL_R = 92;
 
     var WHEEL_PRIZES = [
-      { label: "Premio sorpresa", icon: "🎁", color: "#6D388B", shout: "¡GANASTE!",
+      { label: "Premio sorpresa", icon: "🎁", color: "#6D388B", shout: "¡GANASTE!", slug: "sorpresa",
         hook: "Y no te decimos qué es todavía... Regístrate para descubrirlo 🎁",
         cta: "DESCUBRIR MI PREMIO 🎁" },
-      { label: "Dulce", icon: "🍬", color: "#FF8577", shout: "¡GANASTE!",
+      { label: "Dulce", icon: "🍬", color: "#FF8577", shout: "¡GANASTE!", slug: "dulce",
         hook: "Muéstrale esto al equipo del stand y te dan tu dulce 🍬 Llena tus datos y mira por qué los referentes más grandes ya trabajan con Primos — tú también puedes acceder al mejor catálogo.",
         cta: "RECLAMAR MI DULCE 🍬" },
-      { label: "Sigue intentando", icon: "🔁", color: "#FFB25C", shout: "¡CASI!",
+      { label: "Sigue intentando", icon: "🔁", color: "#FFB25C", shout: "¡CASI!", slug: "sigue_intentando",
         hook: "Esta vez no, pero tienes una segunda oportunidad 🔁 Regístrate y vuelve a intentarlo.",
         cta: "QUIERO MI SEGUNDA OPORTUNIDAD 🔁" },
-      { label: "Sigue intentando", icon: "🔁", color: "#FF8A0A", shout: "¡CASI!",
+      { label: "Sigue intentando", icon: "🔁", color: "#FF8A0A", shout: "¡CASI!", slug: "sigue_intentando",
         hook: "Esta vez no, pero tienes una segunda oportunidad 🔁 Regístrate y vuelve a intentarlo.",
         cta: "QUIERO MI SEGUNDA OPORTUNIDAD 🔁" },
-      { label: "Dulce", icon: "🍬", color: "#9B6FC2", shout: "¡GANASTE!",
+      { label: "Dulce", icon: "🍬", color: "#9B6FC2", shout: "¡GANASTE!", slug: "dulce",
         hook: "Muéstrale esto al equipo del stand y te dan tu dulce 🍬 Llena tus datos y mira por qué los referentes más grandes ya trabajan con Primos — tú también puedes acceder al mejor catálogo.",
         cta: "RECLAMAR MI DULCE 🍬" },
-      { label: "Landing gratis", icon: "🏆", color: "#FF503E", shout: "¡TE GANASTE LA GRANDE!",
+      { label: "Landing gratis", icon: "🏆", color: "#FF503E", shout: "¡TE GANASTE LA GRANDE!", slug: "landing_gratis",
         hook: "Una landing page GRATIS, hecha por Mesa Studio 🏆 Regístrate ya para reclamarla.",
         cta: "RECLAMAR MI LANDING 🏆" }
     ];
@@ -752,12 +751,14 @@
     function onLanded(index){
       spinning = false;
       var prize = WHEEL_PRIZES[index];
+      state.premio = prize.slug;
       document.getElementById("win-icon").textContent = prize.icon;
       document.getElementById("win-shout").textContent = prize.shout;
       document.getElementById("win-prize").textContent = prize.label;
       document.getElementById("win-sub").textContent = prize.hook;
       document.getElementById("btn-claim").textContent = prize.cta;
       document.getElementById("win-overlay").classList.add("show");
+      document.getElementById("btn-spin").disabled = true;
       launchConfetti();
       playFanfare();
     }
@@ -785,11 +786,10 @@
   var TALLY_URL = "https://tally.so/r/XxpozO";
 
   document.getElementById("btn-claim").addEventListener("click", function(){
-    window.location.href = TALLY_URL;
-  });
-
-  document.getElementById("btn-spin-again").addEventListener("click", function(){
-    document.getElementById("win-overlay").classList.remove("show");
+    var qs = new URLSearchParams();
+    if (state.premio) qs.set("premio", state.premio);
+    if (state.punto) qs.set("punto", state.punto);
+    window.location.href = TALLY_URL + "?" + qs.toString();
   });
 
   document.getElementById("btn-reset").addEventListener("click", function(){
