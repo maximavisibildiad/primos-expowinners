@@ -290,6 +290,13 @@
   }
   .pass-card span{font-size:.7rem; font-weight:700; letter-spacing:.06em; color:var(--ink-soft); text-transform:uppercase;}
   .pass-card strong{font-size:1.5rem; font-weight:800; color:var(--primary);}
+  .code-card{
+    background:var(--surface); border:2px dashed var(--accent);
+    border-radius:var(--radius-md); padding:14px 22px; margin:0 0 14px;
+    display:flex; flex-direction:column; gap:4px; width:100%; max-width:300px;
+  }
+  .code-card span{font-size:.68rem; font-weight:700; letter-spacing:.06em; color:var(--ink-soft); text-transform:uppercase;}
+  .code-card strong{font-size:1.4rem; font-weight:800; letter-spacing:.03em; color:var(--accent);}
 
   .wheel-label{
     font-size:.7rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
@@ -360,6 +367,47 @@
     padding:14px 18px; font-size:.85rem; color:var(--ink); line-height:1.5; text-align:left;
   }
 
+  .win-overlay{
+    position:fixed; inset:0; z-index:60;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(18,18,18,.74);
+    opacity:0; pointer-events:none;
+    transition:opacity .25s ease;
+    padding:24px;
+  }
+  .win-overlay.show{ opacity:1; pointer-events:auto; }
+  .win-card{
+    background:var(--surface); border-radius:var(--radius-lg);
+    padding:38px 28px 30px; width:100%; max-width:340px;
+    text-align:center; box-shadow:0 30px 70px -20px rgba(0,0,0,.6);
+    transform:scale(.7) translateY(20px); opacity:0;
+    transition:transform .45s cubic-bezier(.2,1.4,.4,1), opacity .3s ease;
+  }
+  .win-overlay.show .win-card{ transform:scale(1) translateY(0); opacity:1; }
+  .win-icon{
+    font-size:5.2rem; line-height:1;
+    filter:drop-shadow(0 10px 18px rgba(0,0,0,.35));
+  }
+  .win-overlay.show .win-icon{ animation:winBounce 1.1s ease .2s 2; }
+  @keyframes winBounce{
+    0%,100%{transform:translateY(0) scale(1);}
+    30%{transform:translateY(-14px) scale(1.08);}
+    55%{transform:translateY(0) scale(.97);}
+    75%{transform:translateY(-4px) scale(1.02);}
+  }
+  .win-shout{
+    font-size:2.1rem; font-weight:800; color:var(--primary); letter-spacing:-.02em;
+    margin:10px 0 2px; text-wrap:balance;
+  }
+  .win-prize{
+    font-size:1.3rem; font-weight:800; color:var(--ink); margin:2px 0 12px; text-wrap:balance;
+  }
+  .win-sub{ color:var(--ink-soft); font-size:.85rem; line-height:1.5; margin:0 0 6px; max-width:28ch; margin-left:auto; margin-right:auto; }
+  @media (prefers-reduced-motion: reduce){
+    .win-overlay.show .win-icon{ animation:none; }
+    .win-card{ transition:opacity .2s ease; transform:none; }
+  }
+
   .confetti-layer{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:50;}
   .confetti-piece{
     position:absolute; top:-10px; width:8px; height:14px; border-radius:2px;
@@ -415,8 +463,7 @@
         <div class="wheel-hub" aria-hidden="true">🎯</div>
       </div>
       <button class="btn-primary" id="btn-spin" type="button">GIRAR</button>
-      <p class="wheel-note" id="wheel-result">Esta ficha es solo de práctica — la de verdad se decide en el stand.</p>
-      <button class="btn-primary" id="btn-claim" type="button" hidden>RECLAMAR MI PREMIO 🎁</button>
+      <p class="wheel-note">Esta ficha es solo de práctica — la de verdad se decide en el stand.</p>
 
       <div class="deal-eyebrow">Lo que te puedes ganar</div>
       <div class="prize-grid">
@@ -426,6 +473,17 @@
         <div class="prize-chip"><i>🔁</i><span>Sigue intentando</span></div>
       </div>
     </section>
+
+    <div class="win-overlay" id="win-overlay" aria-hidden="true">
+      <div class="win-card">
+        <div class="win-icon" id="win-icon">🏆</div>
+        <div class="win-shout">¡GANASTE!</div>
+        <div class="win-prize" id="win-prize">Premio</div>
+        <p class="win-sub">Así de emocionante se siente — regístrate para ir a lanzarla de verdad en el stand 🎯</p>
+        <div class="cta-wrap"><button class="btn-primary" id="btn-claim" type="button">RECLAMAR MI PREMIO 🎁</button></div>
+        <button class="link-ghost" id="btn-spin-again" type="button">↺ Girar otra vez</button>
+      </div>
+    </div>
 
     <section id="s-form" class="screen">
       <h2>Reclama tu premio</h2>
@@ -497,6 +555,10 @@
       <div class="pass-card">
         <span>Muestra esta pantalla en el stand</span>
         <strong>Lanza tu ficha 🎯</strong>
+      </div>
+      <div class="code-card">
+        <span>Tu código de registro</span>
+        <strong id="claim-code"></strong>
       </div>
 
       <div class="upsell">
@@ -662,16 +724,17 @@
 
     function onLanded(index){
       spinning = false;
-      document.getElementById("wheel-result").textContent =
-        "¡Cayó en " + WHEEL_PRIZES[index].icon + " " + WHEEL_PRIZES[index].label + "! Así de emocionante se siente — regístrate para ir a lanzarla de verdad 🎯";
-      document.getElementById("btn-claim").hidden = false;
+      var prize = WHEEL_PRIZES[index];
+      document.getElementById("win-icon").textContent = prize.icon;
+      document.getElementById("win-prize").textContent = prize.label;
+      document.getElementById("win-overlay").classList.add("show");
       launchConfetti();
     }
 
     function spin(){
       if (spinning) return;
       spinning = true;
-      document.getElementById("wheel-result").textContent = "";
+      document.getElementById("win-overlay").classList.remove("show");
       var idx = pickIndex();
       var spins = 5;
       totalRotation += rotationFor(idx, spins);
@@ -689,7 +752,12 @@
   });
 
   document.getElementById("btn-claim").addEventListener("click", function(){
+    document.getElementById("win-overlay").classList.remove("show");
     showScreen("s-form");
+  });
+
+  document.getElementById("btn-spin-again").addEventListener("click", function(){
+    document.getElementById("win-overlay").classList.remove("show");
   });
 
   document.getElementById("reg-form").addEventListener("submit", function(e){
@@ -706,9 +774,11 @@
     state.city = city;
     state.biztype = biztype;
     state.interest = interest;
+    state.code = "PRIMOS-" + Math.floor(1000 + Math.random() * 9000);
 
     document.getElementById("pass-greet").textContent =
       "¡Listo, " + name + "! Muestra esta pantalla y lanza tu ficha 🎯";
+    document.getElementById("claim-code").textContent = state.code;
 
     showScreen("s-pass");
     launchConfetti();
@@ -716,8 +786,7 @@
 
   document.getElementById("btn-reset").addEventListener("click", function(){
     document.getElementById("reg-form").reset();
-    document.getElementById("wheel-result").textContent = "Esta ficha es solo de práctica — la de verdad se decide en el stand.";
-    document.getElementById("btn-claim").hidden = true;
+    document.getElementById("win-overlay").classList.remove("show");
     showScreen("s-hero");
   });
 
