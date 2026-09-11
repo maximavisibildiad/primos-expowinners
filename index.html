@@ -390,8 +390,8 @@
     <section id="s-hero" class="screen is-active">
       <div class="hero-badge">🔥 SOLO EN EXPOWINNERS</div>
       <h1>Decide <span class="hl">tu suerte.</span></h1>
-      <p class="sub">Regístrate, lanza tu ficha en el tablero de Primo's y gana premios reales. 12 y 13 de septiembre, Centro de Convenciones Ágora, Bogotá.</p>
-      <div class="cta-wrap"><button class="btn-primary" id="btn-go-form">REGISTRARME Y JUGAR 🎯</button></div>
+      <p class="sub">Gira la ruleta, mira qué te puede tocar y ven a lanzar tu ficha de verdad al tablero de Primo's. 12 y 13 de septiembre, Centro de Convenciones Ágora, Bogotá.</p>
+      <div class="cta-wrap"><button class="btn-primary" id="btn-go-wheel">¡QUIERO GIRAR! 🎯</button></div>
       <div class="live-counter">🔥 <span id="spin-count">128</span> fichas lanzadas hoy</div>
       <div class="trust">+3.800 comercios ya compran con Primos</div>
       <div class="badge-grid">
@@ -404,9 +404,32 @@
       <div class="deal-strip" id="deal-strip-hero"></div>
     </section>
 
+    <section id="s-wheel" class="screen">
+      <h2>Gira y descubre tu suerte</h2>
+      <p class="sub">Así se ve el tablero — el premio de verdad se decide en el stand.</p>
+      <div class="wheel-wrap">
+        <div class="wheel-glow" aria-hidden="true"></div>
+        <div class="pointer" aria-hidden="true"></div>
+        <svg class="wheel" id="wheel" viewBox="0 0 280 280" role="img" aria-label="Ruleta de práctica Primo's"></svg>
+        <div class="wheel-shine" aria-hidden="true"></div>
+        <div class="wheel-hub" aria-hidden="true">🎯</div>
+      </div>
+      <button class="btn-primary" id="btn-spin" type="button">GIRAR</button>
+      <p class="wheel-note" id="wheel-result">Esta ficha es solo de práctica — la de verdad se decide en el stand.</p>
+      <button class="btn-primary" id="btn-claim" type="button" hidden>RECLAMAR MI PREMIO 🎁</button>
+
+      <div class="deal-eyebrow">Lo que te puedes ganar</div>
+      <div class="prize-grid">
+        <div class="prize-chip"><i>🏆</i><span>Landing page gratis</span></div>
+        <div class="prize-chip"><i>🎁</i><span>Premio sorpresa</span></div>
+        <div class="prize-chip"><i>🍬</i><span>Dulce</span></div>
+        <div class="prize-chip"><i>🔁</i><span>Sigue intentando</span></div>
+      </div>
+    </section>
+
     <section id="s-form" class="screen">
-      <h2>Un minuto y ya puedes jugar</h2>
-      <p class="sub">Llena esto y te llevamos a lanzar tu ficha en el tablero.</p>
+      <h2>Reclama tu premio</h2>
+      <p class="sub">Déjanos tus datos y te llevamos al stand a lanzar tu ficha de verdad.</p>
       <form id="reg-form">
         <label>Nombre completo
           <input required id="f-name" type="text" placeholder="Tu nombre" autocomplete="name">
@@ -463,7 +486,7 @@
           <input required type="checkbox" id="f-consent">
           Autorizo a Primos a contactarme y tratar mis datos según su <a href="https://primoscolombia.com/policies/privacy-policy" target="_blank" rel="noopener">política de tratamiento de datos</a> (Ley 1581 de 2012).
         </label>
-        <button class="btn-primary" type="submit">LISTO, QUIERO JUGAR</button>
+        <button class="btn-primary" type="submit">RECLAMAR MI PREMIO</button>
       </form>
     </section>
 
@@ -476,24 +499,6 @@
         <strong>Lanza tu ficha 🎯</strong>
       </div>
 
-      <div class="wheel-label">🎮 Practica tu lanzamiento — decide tu suerte</div>
-      <div class="wheel-wrap">
-        <div class="wheel-glow" aria-hidden="true"></div>
-        <div class="pointer" aria-hidden="true"></div>
-        <svg class="wheel" id="wheel" viewBox="0 0 280 280" role="img" aria-label="Ruleta de práctica Primo's"></svg>
-        <div class="wheel-shine" aria-hidden="true"></div>
-        <div class="wheel-hub" aria-hidden="true">🎯</div>
-      </div>
-      <button class="btn-primary" id="btn-spin" type="button">GIRAR (demo)</button>
-      <p class="wheel-note" id="wheel-result">Esta ficha es solo de práctica — la de verdad se decide en el stand.</p>
-
-      <div class="deal-eyebrow">Lo que te puedes ganar</div>
-      <div class="prize-grid">
-        <div class="prize-chip"><i>🏆</i><span>Landing page gratis</span></div>
-        <div class="prize-chip"><i>🎁</i><span>Premio sorpresa</span></div>
-        <div class="prize-chip"><i>🍬</i><span>Dulce</span></div>
-        <div class="prize-chip"><i>🔁</i><span>Sigue intentando</span></div>
-      </div>
       <div class="upsell">
         <strong>¿Tienes negocio?</strong> Como aliado Primos tienes acceso a más de 3.800 productos virales al mejor precio para revender. Pregúntanos cómo en el stand.
       </div>
@@ -658,7 +663,8 @@
     function onLanded(index){
       spinning = false;
       document.getElementById("wheel-result").textContent =
-        "¡Cayó en " + WHEEL_PRIZES[index].icon + " " + WHEEL_PRIZES[index].label + "! Así de emocionante se siente — ve al stand y lánzala de verdad 🎯";
+        "¡Cayó en " + WHEEL_PRIZES[index].icon + " " + WHEEL_PRIZES[index].label + "! Así de emocionante se siente — regístrate para ir a lanzarla de verdad 🎯";
+      document.getElementById("btn-claim").hidden = false;
       launchConfetti();
     }
 
@@ -678,7 +684,11 @@
   }
   initWheel();
 
-  document.getElementById("btn-go-form").addEventListener("click", function(){
+  document.getElementById("btn-go-wheel").addEventListener("click", function(){
+    showScreen("s-wheel");
+  });
+
+  document.getElementById("btn-claim").addEventListener("click", function(){
     showScreen("s-form");
   });
 
@@ -706,6 +716,8 @@
 
   document.getElementById("btn-reset").addEventListener("click", function(){
     document.getElementById("reg-form").reset();
+    document.getElementById("wheel-result").textContent = "Esta ficha es solo de práctica — la de verdad se decide en el stand.";
+    document.getElementById("btn-claim").hidden = true;
     showScreen("s-hero");
   });
 
