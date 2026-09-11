@@ -744,8 +744,9 @@
       var mid = index * segDeg + segDeg / 2;
       var jitter = (Math.random() - 0.5) * (segDeg * 0.5);
       var target = mid + jitter;
-      var base = (360 - target + 360) % 360;
-      return base + spins * 360;
+      var currentMod = totalRotation % 360;
+      var delta = (360 - ((target + currentMod) % 360)) % 360;
+      return delta + spins * 360;
     }
 
     function onLanded(index){
