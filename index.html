@@ -430,6 +430,11 @@
     font-size:1.3rem; font-weight:800; color:var(--ink); margin:2px 0 12px; text-wrap:balance;
   }
   .win-sub{ color:var(--ink-soft); font-size:.85rem; line-height:1.5; margin:0 0 6px; max-width:28ch; margin-left:auto; margin-right:auto; }
+  .win-screenshot{
+    display:inline-block; background:var(--surface-2); color:var(--ink);
+    font-size:.72rem; font-weight:800; line-height:1.4;
+    padding:8px 12px; border-radius:10px; margin:4px 0 14px; max-width:24ch;
+  }
   @media (prefers-reduced-motion: reduce){
     .win-overlay.show .win-icon{ animation:none; }
     .win-card{ transition:opacity .2s ease; transform:none; }
@@ -505,6 +510,7 @@
         <div class="win-shout" id="win-shout">¡GANASTE!</div>
         <div class="win-prize" id="win-prize">Premio</div>
         <p class="win-sub" id="win-sub">¡Así se siente ganar! Regístrate para reclamar tu premio real 🎯</p>
+        <p class="win-screenshot">📸 Toma captura de esta pantalla ahora — es tu comprobante para el equipo</p>
         <div class="cta-wrap"><button class="btn-primary" id="btn-claim" type="button">RECLAMAR MI PREMIO 🎁</button></div>
       </div>
     </div>
@@ -525,6 +531,7 @@
         <span>Muéstrale al equipo</span>
         <strong id="pass-prize">Reclama tu premio</strong>
       </div>
+      <p class="win-screenshot" style="margin-left:auto;margin-right:auto;">📸 ¿No ves tu premio arriba? Muéstrale al equipo la captura que tomaste al ganar</p>
       <div class="code-card">
         <span>Tu código de registro</span>
         <strong id="claim-code"></strong>
