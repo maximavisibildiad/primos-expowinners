@@ -807,17 +807,22 @@
 
   if (params.get("done") === "1"){
     state.code = "PRIMOS-" + Math.floor(1000 + Math.random() * 9000);
-    document.getElementById("pass-greet").textContent =
-      "¡Listo! Muestra esta pantalla para reclamar tu premio 🎯";
     document.getElementById("claim-code").textContent = state.code;
 
+    var saved = null;
     try {
-      var saved = JSON.parse(localStorage.getItem("primos_premio") || "null");
-      if (saved && saved.label){
-        document.getElementById("pass-prize").textContent = saved.icon + " " + saved.label;
-        localStorage.removeItem("primos_premio");
-      }
+      saved = JSON.parse(localStorage.getItem("primos_premio") || "null");
+      localStorage.removeItem("primos_premio");
     } catch (err) {}
+
+    if (saved && saved.label){
+      document.getElementById("pass-greet").textContent =
+        "¡Listo! Reclama tu premio: " + saved.icon + " " + saved.label;
+      document.getElementById("pass-prize").textContent = saved.icon + " " + saved.label;
+    } else {
+      document.getElementById("pass-greet").textContent =
+        "¡Listo! Muestra esta pantalla para reclamar tu premio 🎯";
+    }
 
     showScreen("s-pass");
   }
